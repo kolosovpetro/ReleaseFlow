@@ -3,6 +3,8 @@ trigger:
     include:
       - develop
       - release/*
+        
+pr: none
 
 variables:
   - name: buildPlatform

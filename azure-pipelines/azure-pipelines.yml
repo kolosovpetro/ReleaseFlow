@@ -13,10 +13,8 @@ variables:
     value: 'Any CPU'
   - name: buildConfiguration
     value: 'Release'
-#  - name: backendProjectPath
-#    value: 'MangoAPI.Presentation/MangoAPI.Presentation.csproj'
-#  - name: frontEndProjectPath
-#    value: 'MangoAPI.Client'
+  - name: backendProjectPath
+    value: 'ReleaseFlow.WebApp/ReleaseFlow.WebApp.csproj'
 
 stages:
   - stage: 'Build_Test'

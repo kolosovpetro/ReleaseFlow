@@ -16,25 +16,18 @@ steps:
     inputs:
       command: 'build'
       arguments: '--configuration $(buildConfiguration) --no-restore'
-      
-  - task: DotNetCoreCLI@2
-    displayName: 'Run unit tests'
-    inputs:
-      command: 'test'
-      projects: 'DotnetTemplate.Tests/DotnetTemplate.Tests.csproj'
-      arguments: '--no-restore --collect:"XPlat Code Coverage" --settings azure-pipelines/coverage.runsettings'
 
-#  - task: DotNetCoreCLI@2
-#    displayName: 'Dotnet Publish'
-#    inputs:
-#      command: 'publish'
-#      publishWebProjects: false
-#      projects: '$(backendProjectPath)'
-#      arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)/$(BuildConfiguration) --no-build'
-#
-#  - task: PublishBuildArtifacts@1
-#    displayName: 'Publish Artifacts'
-#    inputs:
-#      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-#      ArtifactName: 'drop'
-#      publishLocation: 'Container'
+  - task: DotNetCoreCLI@2
+    displayName: 'Dotnet Publish'
+    inputs:
+      command: 'publish'
+      publishWebProjects: false
+      projects: '$(backendProjectPath)'
+      arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)/$(BuildConfiguration) --no-build'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifacts'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'

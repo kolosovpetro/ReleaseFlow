@@ -1,9 +1,4 @@
-trigger:
-  branches:
-    include:
-      - develop
-
-pr: none
+trigger: none
 
 variables:
   - name: buildPlatform

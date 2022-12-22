@@ -1,0 +1,53 @@
+trigger:
+  branches:
+    include:
+      - develop
+      - release/*
+        
+pr: none
+
+variables:
+  - name: buildPlatform
+    value: 'Any CPU'
+  - name: buildConfiguration
+    value: 'Release'
+  - name: backendProjectPath
+    value: 'ReleaseFlow.WebApp/ReleaseFlow.WebApp.csproj'
+
+stages:
+  - stage: 'Build_Test'
+    jobs:
+      - job: "Build"
+        displayName: 'Build and Test'
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        steps:
+          - template: azure-pipelines-template.yml
+
+  - stage: "dev"
+    displayName: "Deploy to DEV Environment"
+    dependsOn: Build_Test
+    condition: succeeded('Build_Test')
+    jobs:
+      - deployment: Deploy_to_Dev
+        displayName: "Deploy to DEV Environment"
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: dev
+        variables:
+          - group: DEPLOY_DEV_VARS
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: drop
+
+                - task: AzureRmWebAppDeployment@4
+                  inputs:
+                    ConnectionType: "AzureRM"
+                    azureSubscription: "ReleaseDemoServiceConnection"
+                    appType: "webApp"
+                    WebAppName: "$(WebAppName)"
+                    packageForLinux: "$(Pipeline.Workspace)/drop/$(BuildConfiguration)/ReleaseFlow.WebApp.zip"

@@ -1,4 +1,23 @@
 steps:
+  - checkout: self
+    fetchDepth: 0
+
+  - task: gitversion/setup@0
+    displayName: 'GitVersion Setup'
+    inputs:
+      versionSpec: '5.9.x'
+
+  - task: gitversion/execute@0
+    displayName: 'GitVersion Execute'
+    inputs:
+      updateAssemblyInfo: true
+
+  - bash: echo $Action$BuildVersion
+    displayName: 'Set Build Version'
+    env:
+      Action: '##vso[build.updatebuildnumber]'
+      BuildVersion: $(GitVersion.SemVer)
+      
   - task: UseDotNet@2
     displayName: 'Install .NET 6.x SDK'
     inputs:
@@ -16,25 +35,18 @@ steps:
     inputs:
       command: 'build'
       arguments: '--configuration $(buildConfiguration) --no-restore'
-      
-  - task: DotNetCoreCLI@2
-    displayName: 'Run unit tests'
-    inputs:
-      command: 'test'
-      projects: 'DotnetTemplate.Tests/DotnetTemplate.Tests.csproj'
-      arguments: '--no-restore --collect:"XPlat Code Coverage" --settings azure-pipelines/coverage.runsettings'
 
-#  - task: DotNetCoreCLI@2
-#    displayName: 'Dotnet Publish'
-#    inputs:
-#      command: 'publish'
-#      publishWebProjects: false
-#      projects: '$(backendProjectPath)'
-#      arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)/$(BuildConfiguration) --no-build'
-#
-#  - task: PublishBuildArtifacts@1
-#    displayName: 'Publish Artifacts'
-#    inputs:
-#      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-#      ArtifactName: 'drop'
-#      publishLocation: 'Container'
+  - task: DotNetCoreCLI@2
+    displayName: 'Dotnet Publish'
+    inputs:
+      command: 'publish'
+      publishWebProjects: false
+      projects: '$(backendProjectPath)'
+      arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)/$(BuildConfiguration) --no-build'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifacts'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'

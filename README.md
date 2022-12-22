@@ -1,48 +1,29 @@
-# .NET project template
+# Release Flow
 
-[![Run Build and Test](https://github.com/kolosovpetro/DotnetTemplate/actions/workflows/run-build-and-test.yml/badge.svg)](https://github.com/kolosovpetro/DotnetTemplate/actions/workflows/run-build-and-test.yml)
-[![Build Status](https://dev.azure.com/RazumovskyPrivateProjects/DotnetTemplate/_apis/build/status/build-dotnet-template?branchName=master)](https://dev.azure.com/RazumovskyPrivateProjects/DotnetTemplate/_build/latest?definitionId=2&branchName=master)
-[![Run .NET SonarCloud analysis](https://github.com/kolosovpetro/DotnetTemplate/actions/workflows/sonar-scan.yml/badge.svg)](https://github.com/kolosovpetro/DotnetTemplate/actions/workflows/sonar-scan.yml)
+[![Run Build and Test](https://github.com/kolosovpetro/ReleaseFlow/actions/workflows/run-build-and-test.yml/badge.svg)](https://github.com/kolosovpetro/ReleaseFlow/actions/workflows/run-build-and-test.yml)
 
-This is a template for creating .NET projects with compile-time code style checking, CI/CD workflows for Github Actions
-and Azure pipelines.
-Also, includes SonarCloud integration.
+In this demo project a GitFlow release approach is shown where Semantic Versioning is a part of CI/CD pipeline.
 
-## Nuget packages
+### Release strategy
 
-### Compile time code style checking
+See also [Atlassian Docs GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
-- `Microsoft.CodeAnalysis.NetAnalyzers`
-
-### Unit tests project
-
-- `coverlet.msbuild`
-- `coverlet.collector`
-- `FluentAssertions`
-
-## Required property groups in project file
-
-```xml
-
-<PropertyGroup>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisMode>Recommended</AnalysisMode>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-</PropertyGroup>
-```
-
-## Commands
-
-- `dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput=../TestResults`
-- `dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.8.6`
-- `reportgenerator "-reports:TestResults.opencover.xml" "-targetdir:coveragereport" -reporttypes:Html`
-- `dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput=TestResults -p:SkipAutoProps=true -p:Threshold=80`
+- Checkout from `develop` to `release/{x.x.x}` branch, where `{x.x.x}` is a semantic version number
+- Final release updates like minor bugfixes, documentation updates are done to `release/{x.x.x}` branch
+- Deployments to `dev` environment run automatically from branches: `release/*` and `develop`
+- Deployments to `qa` environment run automatically from branches: `release/*` and `develop` with **manual approval**
+- When release is ready, there is a pull request from `release/{x.x.x}` branch to `master` branch
+- When pull request from `release/{x.x.x}` to `master` is merged, a new `tag {x.x.x}` is created and pushed
+- After `tag {x.x.x}` is pushed a new deployment to `prod` environment is started manually from `master` branch
+    - `git tag -a v0.1.0 -m "my version 0.1.0"`
+    - `git tag -d <tag_name>`
+    - `git push origin <tag_name>`
+    - `git push --delete origin tagname`
+- When release is ready, there is a pull request from `release/{x.x.x}` branch to `develop` branch
+- When pull request from `release/{x.x.x}` to `develop` is merged there is automatic deployment to `dev`
+- When pull request from `release/{x.x.x}` to `develop` is merged there is automatic deployment to `qa` with **manual
+  approval**
 
 ## Sources
 
-- [Defining formatting rules in .NET with EditorConfig](https://blog.genezini.com/p/defining-formatting-rules-in-.net-with-editorconfig)
-- [Enforcing .NET code style rules at compile time](https://blog.genezini.com/p/enforcing-.net-code-style-rules-at-compile-time)
-- [Analyzing and enforcing .NET code coverage with coverlet](https://blog.genezini.com/p/analyzing-and-enforcing-.net-code-coverage-with-coverlet)
-- [SonarCloud via GitHub Actions](https://github.com/kolosovpetro/SonarCloudViaGithubActions)
-- [How to build a .NET template and use it within Visual Studio. Part 1: Key concepts](https://www.mytechramblings.com/posts/create-dotnet-templates-for-visual-studio-part-1/)
-- [How to build a .NET template and use it within Visual Studio. Part 2: Creating a template package](https://www.mytechramblings.com/posts/create-dotnet-templates-for-visual-studio-part-2/)
+- [Atlassian GitFlow Documentation](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)

@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{0ADEAED5
 		.editorconfig = .editorconfig
 		nuget.config = nuget.config
 		ReleaseFlow.sln.DotSettings = ReleaseFlow.sln.DotSettings
+		GitVersion.yml = GitVersion.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{6E8508F0-6477-4C41-B8A0-BC3F27B6ABF9}"

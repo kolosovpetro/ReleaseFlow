@@ -1,4 +1,20 @@
 steps:
+  - task: gitversion/setup@0
+    displayName: 'GitVersion Setup'
+    inputs:
+      versionSpec: '5.9.x'
+
+  - task: gitversion/execute@0
+    displayName: 'GitVersion Execute'
+    inputs:
+      updateAssemblyInfo: true
+
+  - bash: echo $Action$BuildVersion
+    displayName: 'Set Build Version'
+    env:
+      Action: '##vso[build.updatebuildnumber]'
+      BuildVersion: $(GitVersion.SemVer)
+      
   - task: UseDotNet@2
     displayName: 'Install .NET 6.x SDK'
     inputs:

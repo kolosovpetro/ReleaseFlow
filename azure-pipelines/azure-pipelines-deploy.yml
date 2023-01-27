@@ -1,8 +1,9 @@
 trigger:
   branches:
-    include:
-      - release/*
-        
+    tags:
+      include:
+        - 'v*'
+
 pr: none
 
 variables:

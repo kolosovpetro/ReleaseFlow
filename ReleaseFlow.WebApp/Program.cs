@@ -33,5 +33,7 @@ internal static class Program
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
         app.Run();
+
+        // this is release update, for example
     }
 }

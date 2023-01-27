@@ -1,14 +1,11 @@
 trigger:
   branches:
     include:
-      - master
-      - develop
-
+      - main
 pr:
   branches:
     include:
-      - master
-      - develop
+      - main
 
 variables:
   - name: buildPlatform

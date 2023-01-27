@@ -5,3 +5,5 @@
 In this demo project a GitFlow release approach is shown where Semantic Versioning is a part of CI/CD pipeline.
 
 ### Release strategy
+
+Release flow is described at this [PDF](https://kolosovpetro.github.io/pdf/ReleaseFlowProposal.pdf)
